@@ -8,6 +8,14 @@
       name="description"
       content="로또 6/45 번호 추천(랜덤/필터) + 시뮬레이션 + 통계"
     />
+    <meta
+      property="og:image"
+      content="https://dummyimage.com/1200x630/0f172a/ffffff&amp;text=LOTTO"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1020'/%3E%3Ctext x='32' y='42' font-size='36' text-anchor='middle' fill='%23ffffff'%3E%E2%98%98%3C/text%3E%3C/svg%3E"
+    />
     <style>
       :root {
         --bg: #0b1020;
@@ -81,6 +89,26 @@
         flex-wrap: wrap;
         justify-content: flex-end;
       }
+      .btn-link {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-weight: 900;
+        cursor: pointer;
+        color: white;
+        background: var(--accent);
+        box-shadow: 0 12px 30px rgba(43, 92, 255, 0.18);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .btn-link.ghost {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--text);
+        box-shadow: none;
+      }
       button {
         border: none;
         border-radius: 12px;
@@ -132,6 +160,32 @@
         gap: 10px;
         align-items: center;
         flex-wrap: wrap;
+      }
+      .hero-action {
+        margin-top: 10px;
+      }
+      .hero-result {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        min-height: 44px;
+      }
+      .hero-result .chip {
+        min-width: 40px;
+        height: 40px;
+        font-size: 15px;
+      }
+      .hero-result .placeholder {
+        color: var(--muted);
+        font-weight: 800;
+        font-size: 13px;
+      }
+      .hero-action button {
+        width: 100%;
+        font-size: 16px;
+        padding: 14px;
       }
       .between {
         justify-content: space-between;
@@ -383,6 +437,13 @@
           </div>
         </div>
         <div class="top-actions">
+          <a
+            class="btn-link ghost"
+            href="https://funnyfunny.cloud/"
+            target="_blank"
+            rel="noopener"
+            >다른 서비스 보기</a
+          >
           <button id="btnCopyAll" class="ghost" title="추천 번호 전체 복사">
             📋 전체 복사
           </button>
@@ -402,6 +463,12 @@
               <span class="pill">🎲 무작위 기반</span>
               <span class="pill">🧪 필터는 “선호”용</span>
             </div>
+          </div>
+          <div class="hero-result" id="heroLuckyResult" aria-live="polite">
+            <div class="placeholder">아직 오늘의 한 세트가 없어.</div>
+          </div>
+          <div class="hero-action">
+            <button id="btnLucky">✨ 오늘의 한 세트</button>
           </div>
 
           <div class="field">
@@ -476,7 +543,6 @@
             <div class="row">
               <button id="btnGen5">추천 5세트</button>
               <button id="btnGen10" class="ghost">추천 10세트</button>
-              <button id="btnLucky" class="ghost">✨ 오늘의 한 세트</button>
             </div>
             <div class="row">
               <span class="pill"
@@ -1049,6 +1115,24 @@
         });
       }
 
+      function renderHeroResult(nums) {
+        const box = $("heroLuckyResult");
+        box.innerHTML = "";
+        if (!nums || !nums.length) {
+          const msg = document.createElement("div");
+          msg.className = "placeholder";
+          msg.textContent = "아직 오늘의 한 세트가 없어.";
+          box.appendChild(msg);
+          return;
+        }
+        nums.forEach((n) => {
+          const c = document.createElement("span");
+          c.className = "chip";
+          c.textContent = n;
+          box.appendChild(c);
+        });
+      }
+
       function generateSets(count) {
         const max = premiumOn ? 30 : 10;
         if (count > max) count = max;
@@ -1123,6 +1207,7 @@
         if (!r.ok) return toast(r.err, "warn");
         picks = [r.nums];
         recentPicks.push(r.nums);
+        renderHeroResult(r.nums);
         renderPicks();
         toast("✨ 오늘의 한 세트");
       };
@@ -1141,6 +1226,7 @@
         $("sumMin").value = "90";
         $("sumMax").value = "180";
         picks = [];
+        renderHeroResult(null);
         rebuildGrid();
         renderPicks();
         toast("🔄 초기화 완료");
@@ -1425,6 +1511,7 @@
       initFromURL();
       rebuildGrid();
       renderPicks();
+      renderHeroResult(null);
       syncPremiumUI();
     </script>
   </body>
