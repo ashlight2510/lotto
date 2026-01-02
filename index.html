@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LuckyLab — Lotto 6/45 Simulator & Picks</title>
+    <meta
+      name="description"
+      content="로또 6/45 번호 추천(랜덤/필터) + 시뮬레이션 + 통계"
+    />
+    <style>
+      :root {
+        --bg: #0b1020;
+        --card: rgba(17, 26, 51, 0.84);
+        --text: #e9eeff;
+        --muted: #9aa7c7;
+        --line: rgba(255, 255, 255, 0.1);
+        --accent: #2b5cff;
+        --good: #22c55e;
+        --warn: #f59e0b;
+        --bad: #ef4444;
+        --radius: 18px;
+        --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      }
+      * {
+        box-sizing: border-box;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Apple SD Gothic Neo, Noto Sans KR;
+      }
+      body {
+        margin: 0;
+        color: var(--text);
+        min-height: 100vh;
+        background: radial-gradient(1200px 700px at 20% 0%, #1a2b5a, var(--bg)),
+          radial-gradient(900px 600px at 90% 20%, #10224a, transparent);
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 0 16px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 900;
+        letter-spacing: 0.2px;
+      }
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(
+          135deg,
+          rgba(43, 92, 255, 0.35),
+          rgba(255, 255, 255, 0.06)
+        );
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        font-size: 18px;
+      }
+      .brand small {
+        display: block;
+        color: var(--muted);
+        font-weight: 700;
+        margin-top: 2px;
+      }
+      .top-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      button {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-weight: 900;
+        cursor: pointer;
+        color: white;
+        background: var(--accent);
+        box-shadow: 0 12px 30px rgba(43, 92, 255, 0.18);
+      }
+      button.ghost {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--text);
+        box-shadow: none;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 14px;
+      }
+      @media (max-width: 960px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+      h2,
+      h3 {
+        margin: 0 0 12px 0;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .between {
+        justify-content: space-between;
+      }
+      .pill {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: 13px;
+        color: var(--text);
+      }
+      .kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          monospace;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        font-weight: 800;
+      }
+      .sep {
+        height: 1px;
+        background: var(--line);
+        margin: 12px 0;
+      }
+
+      .field {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .field label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--muted);
+        font-weight: 900;
+        font-size: 12px;
+        letter-spacing: 0.2px;
+        margin-bottom: 8px;
+      }
+      input[type="text"],
+      input[type="number"],
+      textarea,
+      select {
+        width: 100%;
+        background: #0f1733;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text);
+        padding: 12px 12px;
+        border-radius: 12px;
+        outline: none;
+        font-size: 14px;
+        font-weight: 800;
+      }
+      textarea {
+        min-height: 84px;
+        resize: vertical;
+        line-height: 1.55;
+        font-weight: 800;
+      }
+      .help {
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .mini {
+        padding: 9px 10px;
+        border-radius: 12px;
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--text);
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: none;
+        white-space: nowrap;
+      }
+      .mini.good {
+        border-color: rgba(34, 197, 94, 0.45);
+      }
+      .mini.warn {
+        border-color: rgba(245, 158, 11, 0.45);
+      }
+      .mini.bad {
+        border-color: rgba(239, 68, 68, 0.45);
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      @media (max-width: 520px) {
+        .controls {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .ball-grid {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        gap: 8px;
+      }
+      @media (max-width: 520px) {
+        .ball-grid {
+          grid-template-columns: repeat(6, 1fr);
+        }
+      }
+      .ball {
+        user-select: none;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 999px;
+        padding: 9px 0;
+        text-align: center;
+        font-weight: 900;
+        cursor: pointer;
+      }
+      .ball.lock {
+        border-color: rgba(34, 197, 94, 0.7);
+        box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18) inset;
+      }
+      .ball.block {
+        opacity: 0.35;
+        cursor: not-allowed;
+        text-decoration: line-through;
+      }
+
+      .picks {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .pick {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .nums {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 34px;
+        height: 34px;
+        padding: 0 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        font-weight: 900;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+      }
+      th,
+      td {
+        padding: 10px 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        font-weight: 800;
+        font-size: 13px;
+      }
+      th {
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.02);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 18px;
+        transform: translateX(-50%);
+        background: rgba(17, 26, 51, 0.92);
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        border-radius: 999px;
+        color: var(--text);
+        box-shadow: var(--shadow);
+        display: none;
+        gap: 8px;
+        align-items: center;
+        font-weight: 900;
+        max-width: 92vw;
+      }
+      .toast.show {
+        display: inline-flex;
+      }
+      .badge {
+        font-weight: 900;
+      }
+      .badge.good {
+        color: var(--good);
+      }
+      .badge.warn {
+        color: var(--warn);
+      }
+      .badge.bad {
+        color: var(--bad);
+      }
+
+      .premium {
+        border: 1px dashed rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 16px;
+        padding: 12px;
+        margin-top: 12px;
+      }
+      .premium .row {
+        justify-content: space-between;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <div class="logo">🍀</div>
+          <div>
+            <div>LuckyLab</div>
+            <small>로또 6/45 번호 추천 + 시뮬레이션</small>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button id="btnCopyAll" class="ghost" title="추천 번호 전체 복사">
+            📋 전체 복사
+          </button>
+          <button id="btnShare" class="ghost" title="현재 설정 링크 복사">
+            🔗 공유
+          </button>
+          <button id="btnReset" title="초기화">초기화</button>
+        </div>
+      </header>
+
+      <div class="grid">
+        <!-- LEFT: Recommendation -->
+        <section class="card">
+          <div class="row between">
+            <h2>번호 추천</h2>
+            <div class="row">
+              <span class="pill">🎲 무작위 기반</span>
+              <span class="pill">🧪 필터는 “선호”용</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              <span>고정(포함) 번호</span>
+              <span class="muted">최대 6개</span>
+            </label>
+            <div class="ball-grid" id="gridLock"></div>
+            <div class="help">
+              번호를 눌러 <span class="badge good">고정</span>으로 만들면 추천에
+              반드시 포함돼.
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 10px">
+            <label>
+              <span>제외 번호</span>
+              <span class="muted">콤마/공백 OK</span>
+            </label>
+            <input
+              id="excludeInput"
+              type="text"
+              placeholder="예: 1, 7, 13, 22"
+            />
+            <div class="help">제외한 번호는 추천에서 뽑지 않아.</div>
+          </div>
+
+          <div class="controls" style="margin-top: 10px">
+            <div class="field">
+              <label
+                ><span>홀짝 옵션</span><span class="muted">선택</span></label
+              >
+              <select id="oddEven">
+                <option value="any">상관없음</option>
+                <option value="balanced" selected>
+                  대체로 균형(2~4개 홀수)
+                </option>
+                <option value="odd">홀수 위주(4~6개)</option>
+                <option value="even">짝수 위주(4~6개)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label
+                ><span>연속 숫자 제한</span
+                ><span class="muted">최대 길이</span></label
+              >
+              <select id="maxConsecutive">
+                <option value="6">상관없음</option>
+                <option value="3">최대 3연속</option>
+                <option value="2" selected>최대 2연속</option>
+                <option value="1">연속 금지</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="controls" style="margin-top: 10px">
+            <div class="field">
+              <label
+                ><span>합계 최소</span><span class="muted">1~270</span></label
+              >
+              <input id="sumMin" type="number" min="1" max="270" value="90" />
+            </div>
+            <div class="field">
+              <label
+                ><span>합계 최대</span><span class="muted">1~270</span></label
+              >
+              <input id="sumMax" type="number" min="1" max="270" value="180" />
+            </div>
+          </div>
+
+          <div class="row between" style="margin-top: 12px">
+            <div class="row">
+              <button id="btnGen5">추천 5세트</button>
+              <button id="btnGen10" class="ghost">추천 10세트</button>
+              <button id="btnLucky" class="ghost">✨ 오늘의 한 세트</button>
+            </div>
+            <div class="row">
+              <span class="pill"
+                >Seed <span class="kbd" id="seedBadge">auto</span></span
+              >
+              <button id="btnNewSeed" class="ghost" title="랜덤 시드 변경">
+                🎛️ 시드 변경
+              </button>
+            </div>
+          </div>
+
+          <div id="pickList" class="picks"></div>
+
+          <div class="premium">
+            <div class="row">
+              <div>
+                <div style="font-weight: 900">프리미엄(데모)</div>
+                <div class="muted" style="margin-top: 4px">
+                  실결제는 미구현. UI/흐름만.
+                </div>
+              </div>
+              <div class="row">
+                <button id="btnPremium" class="ghost">
+                  💎 프리미엄 켜기/끄기
+                </button>
+              </div>
+            </div>
+            <div class="help">
+              프리미엄 ON이면: 추천 세트 최대 30개, “중복 회피(최근 추천과 겹침
+              최소화)” 옵션이 활성화돼.
+            </div>
+            <div class="row" style="margin-top: 10px">
+              <span class="pill"
+                >상태: <strong id="premiumState">OFF</strong></span
+              >
+              <span class="pill"
+                >옵션: <strong id="avoidDupState">OFF</strong></span
+              >
+              <button id="btnAvoidDup" class="mini good">중복 회피 토글</button>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+          <div class="help">
+            ⚠️ 참고: 추천은 “무작위 + 필터”라서 당첨 확률을 높여준다고 말할
+            근거는 없어. (그냥 취향대로 번호를 뽑기 쉽게 해주는 도구)
+          </div>
+        </section>
+
+        <!-- RIGHT: Simulator -->
+        <aside class="card">
+          <div class="row between">
+            <h2>시뮬레이션</h2>
+            <div class="row">
+              <span class="pill">🧾 비용/당첨 통계</span>
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="field">
+              <label
+                ><span>회차(추첨) 수</span
+                ><span class="muted">예: 200</span></label
+              >
+              <input
+                id="simDraws"
+                type="number"
+                min="1"
+                max="200000"
+                value="2000"
+              />
+            </div>
+            <div class="field">
+              <label
+                ><span>회차당 구매 장수</span
+                ><span class="muted">예: 5</span></label
+              >
+              <input
+                id="simTickets"
+                type="number"
+                min="1"
+                max="100000"
+                value="5"
+              />
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 10px">
+            <label
+              ><span>티켓 가격(원)</span
+              ><span class="muted">기본 1,000</span></label
+            >
+            <input
+              id="ticketPrice"
+              type="number"
+              min="0"
+              step="100"
+              value="1000"
+            />
+            <div class="help">
+              로또 6/45는 1게임 1,000원 안내가 있어.
+              :contentReference[oaicite:3]{index=3}
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 10px">
+            <label
+              ><span>당첨금(원)</span
+              ><span class="muted">1~3등은 회차별 변동</span></label
+            >
+            <div class="controls">
+              <div>
+                <label
+                  class="muted"
+                  style="
+                    display: block;
+                    font-weight: 900;
+                    font-size: 12px;
+                    margin-bottom: 6px;
+                  "
+                  >1등(6개 일치)</label
+                >
+                <input
+                  id="p1"
+                  type="number"
+                  min="0"
+                  step="1000000"
+                  placeholder="예: 2000000000"
+                />
+              </div>
+              <div>
+                <label
+                  class="muted"
+                  style="
+                    display: block;
+                    font-weight: 900;
+                    font-size: 12px;
+                    margin-bottom: 6px;
+                  "
+                  >2등(5+보너스)</label
+                >
+                <input
+                  id="p2"
+                  type="number"
+                  min="0"
+                  step="100000"
+                  placeholder="예: 50000000"
+                />
+              </div>
+              <div>
+                <label
+                  class="muted"
+                  style="
+                    display: block;
+                    font-weight: 900;
+                    font-size: 12px;
+                    margin-bottom: 6px;
+                  "
+                  >3등(5개)</label
+                >
+                <input
+                  id="p3"
+                  type="number"
+                  min="0"
+                  step="10000"
+                  placeholder="예: 1500000"
+                />
+              </div>
+              <div>
+                <label
+                  class="muted"
+                  style="
+                    display: block;
+                    font-weight: 900;
+                    font-size: 12px;
+                    margin-bottom: 6px;
+                  "
+                  >4등(4개)</label
+                >
+                <input
+                  id="p4"
+                  type="number"
+                  min="0"
+                  step="1000"
+                  value="50000"
+                />
+              </div>
+              <div style="grid-column: 1 / -1">
+                <label
+                  class="muted"
+                  style="
+                    display: block;
+                    font-weight: 900;
+                    font-size: 12px;
+                    margin-bottom: 6px;
+                  "
+                  >5등(3개)</label
+                >
+                <input id="p5" type="number" min="0" step="1000" value="5000" />
+              </div>
+            </div>
+            <div class="help">
+              등위 기준(2등=5개+보너스, 3등=5개, 4등=4개, 5등=3개)은 당첨결과
+              안내에서 확인돼. :contentReference[oaicite:4]{index=4}
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 10px">
+            <label
+              ><span>시뮬레이션 모드</span
+              ><span class="muted">추천/랜덤</span></label
+            >
+            <select id="simMode">
+              <option value="random" selected>매번 완전 랜덤</option>
+              <option value="usePicks">현재 추천 세트에서 순환 사용</option>
+            </select>
+            <div class="help">
+              “추천 세트 사용”은 추천이 잘 맞는지 보여주는 게 아니라, 그냥 그
+              세트로 계속 샀을 때의 결과를 보는 용도.
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 12px">
+            <button id="btnSim">시뮬레이션 실행</button>
+            <button id="btnSimFast" class="ghost">⚡ 빠르게(표본 축소)</button>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="field">
+            <label
+              ><span>결과 요약</span><span class="muted">ROI/수익</span></label
+            >
+            <div class="help" id="simSummary">설정 후 실행해줘.</div>
+          </div>
+
+          <div class="field" style="margin-top: 10px">
+            <label><span>당첨 분포</span><span class="muted">횟수</span></label>
+            <table>
+              <thead>
+                <tr>
+                  <th>등수</th>
+                  <th>기준</th>
+                  <th>당첨 횟수</th>
+                </tr>
+              </thead>
+              <tbody id="distBody">
+                <tr>
+                  <td>1등</td>
+                  <td>6개</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>2등</td>
+                  <td>5+보너스</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>3등</td>
+                  <td>5개</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>4등</td>
+                  <td>4개</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>5등</td>
+                  <td>3개</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>낙첨</td>
+                  <td>0~2개</td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="help" style="margin-top: 12px">
+            팁: <span class="kbd">추천 10세트</span> 만든 뒤 “추천 세트
+            순환”으로 돌리면, “그 번호로 계속 샀을 때”의 감각을 볼 수 있어.
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite">
+      ✅ 복사했어
+    </div>
+
+    <script>
+      // =========================
+      // Core: RNG (seeded)
+      // =========================
+      function mulberry32(seed) {
+        let a = seed >>> 0;
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      function randInt(rng, min, max) {
+        // inclusive
+        return Math.floor(rng() * (max - min + 1)) + min;
+      }
+
+      // =========================
+      // UI helpers
+      // =========================
+      const $ = (id) => document.getElementById(id);
+      const toastEl = $("toast");
+      function toast(msg, kind = "ok") {
+        toastEl.textContent = msg;
+        toastEl.style.borderColor =
+          kind === "warn"
+            ? "rgba(245,158,11,.45)"
+            : kind === "bad"
+            ? "rgba(239,68,68,.45)"
+            : "rgba(34,197,94,.45)";
+        toastEl.classList.add("show");
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => toastEl.classList.remove("show"), 1400);
+      }
+      async function copyText(txt) {
+        try {
+          await navigator.clipboard.writeText(txt);
+          toast("✅ 복사했어");
+        } catch (e) {
+          const ta = document.createElement("textarea");
+          ta.value = txt;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          toast("✅ 복사했어");
+        }
+      }
+
+      function cleanNums(str) {
+        if (!str) return [];
+        return String(str)
+          .split(/[\s,]+/)
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map((n) => Number(n))
+          .filter((n) => Number.isInteger(n) && n >= 1 && n <= 45);
+      }
+
+      // =========================
+      // State
+      // =========================
+      let seed = crypto.getRandomValues(new Uint32Array(1))[0] >>> 0;
+      let rng = mulberry32(seed);
+      let picks = []; // array of arrays [6]
+      let locked = new Set(); // included numbers
+      let premiumOn = localStorage.getItem("lucky_premium") === "1";
+      let avoidDupOn = localStorage.getItem("lucky_avoiddup") === "1";
+      let recentPicks = []; // used for avoid-dup feature
+
+      $("seedBadge").textContent = String(seed);
+
+      // =========================
+      // Build lock grid
+      // =========================
+      const grid = $("gridLock");
+      function rebuildGrid() {
+        grid.innerHTML = "";
+        const excluded = new Set(cleanNums($("excludeInput").value));
+        for (let n = 1; n <= 45; n++) {
+          const b = document.createElement("div");
+          b.className = "ball";
+          b.textContent = n;
+
+          const isLocked = locked.has(n);
+          const isBlocked = excluded.has(n);
+
+          if (isLocked) b.classList.add("lock");
+          if (isBlocked) b.classList.add("block");
+
+          b.onclick = () => {
+            const excludedNow = new Set(cleanNums($("excludeInput").value));
+            if (excludedNow.has(n)) {
+              toast("제외 번호는 고정할 수 없어", "warn");
+              return;
+            }
+
+            if (locked.has(n)) {
+              locked.delete(n);
+            } else {
+              if (locked.size >= 6) {
+                toast("고정은 최대 6개", "warn");
+                return;
+              }
+              locked.add(n);
+            }
+            rebuildGrid();
+          };
+
+          grid.appendChild(b);
+        }
+      }
+
+      $("excludeInput").addEventListener("input", () => rebuildGrid());
+
+      // =========================
+      // Constraints for generation
+      // =========================
+      function longestConsecutiveLen(arrSorted) {
+        let best = 1,
+          cur = 1;
+        for (let i = 1; i < arrSorted.length; i++) {
+          if (arrSorted[i] === arrSorted[i - 1] + 1) cur++;
+          else cur = 1;
+          if (cur > best) best = cur;
+        }
+        return best;
+      }
+
+      function oddCount(arr) {
+        let c = 0;
+        for (const x of arr) if (x % 2 === 1) c++;
+        return c;
+      }
+
+      function passesFilters(nums) {
+        const oddEven = $("oddEven").value;
+        const maxCons = Number($("maxConsecutive").value);
+        const sumMin = Number($("sumMin").value);
+        const sumMax = Number($("sumMax").value);
+
+        const s = nums.reduce((a, b) => a + b, 0);
+        if (!(s >= sumMin && s <= sumMax)) return false;
+
+        const oc = oddCount(nums);
+        if (oddEven === "balanced" && !(oc >= 2 && oc <= 4)) return false;
+        if (oddEven === "odd" && !(oc >= 4)) return false;
+        if (oddEven === "even" && !(oc <= 2)) return false;
+
+        const sorted = [...nums].sort((a, b) => a - b);
+        if (longestConsecutiveLen(sorted) > maxCons) return false;
+
+        // avoid-dup (premium demo)
+        if (premiumOn && avoidDupOn && recentPicks.length) {
+          // score: overlap count with last 10 picks (lower is better)
+          let overlap = 0;
+          const recent = recentPicks.slice(-10);
+          const set = new Set(nums);
+          for (const rp of recent) {
+            for (const x of rp) if (set.has(x)) overlap++;
+          }
+          // allow small overlaps; reject heavy overlaps
+          if (overlap >= 18) return false;
+        }
+
+        return true;
+      }
+
+      function genOneSet() {
+        const excluded = new Set(cleanNums($("excludeInput").value));
+        // lock & exclude conflict already prevented in UI, but re-check
+        for (const x of locked) {
+          if (excluded.has(x))
+            return { ok: false, err: "고정 번호와 제외 번호가 겹쳐." };
+        }
+
+        const base = [...locked];
+        if (base.length > 6)
+          return { ok: false, err: "고정 번호가 6개를 초과했어." };
+
+        const pool = [];
+        for (let n = 1; n <= 45; n++) {
+          if (excluded.has(n)) continue;
+          if (locked.has(n)) continue;
+          pool.push(n);
+        }
+        if (pool.length + base.length < 6)
+          return {
+            ok: false,
+            err: "제외/고정 설정 때문에 6개를 만들 수 없어.",
+          };
+
+        const tryLimit = 8000;
+        for (let t = 0; t < tryLimit; t++) {
+          const nums = base.slice();
+          const used = new Set(nums);
+
+          while (nums.length < 6) {
+            const pick = pool[randInt(rng, 0, pool.length - 1)];
+            if (!used.has(pick)) {
+              used.add(pick);
+              nums.push(pick);
+            }
+          }
+          nums.sort((a, b) => a - b);
+
+          if (passesFilters(nums)) return { ok: true, nums };
+        }
+        return {
+          ok: false,
+          err: "필터가 너무 빡세서 추천 생성 실패. (합계/연속/홀짝을 완화해봐)",
+        };
+      }
+
+      // =========================
+      // Render picks
+      // =========================
+      function renderPicks() {
+        const list = $("pickList");
+        list.innerHTML = "";
+
+        if (!picks.length) {
+          const empty = document.createElement("div");
+          empty.className = "help";
+          empty.textContent = "아직 추천이 없어. 위에서 “추천 5세트” 눌러봐.";
+          list.appendChild(empty);
+          return;
+        }
+
+        picks.forEach((set, idx) => {
+          const row = document.createElement("div");
+          row.className = "pick";
+
+          const nums = document.createElement("div");
+          nums.className = "nums";
+          set.forEach((n) => {
+            const c = document.createElement("span");
+            c.className = "chip";
+            c.textContent = n;
+            nums.appendChild(c);
+          });
+
+          const actions = document.createElement("div");
+          actions.className = "row";
+
+          const btnCopy = document.createElement("button");
+          btnCopy.className = "mini good";
+          btnCopy.textContent = "복사";
+          btnCopy.onclick = () => copyText(set.join(", "));
+
+          const btnUse = document.createElement("button");
+          btnUse.className = "mini";
+          btnUse.textContent = "고정으로";
+          btnUse.onclick = () => {
+            locked = new Set(set);
+            rebuildGrid();
+            toast("✅ 고정 번호로 적용했어");
+          };
+
+          const btnDel = document.createElement("button");
+          btnDel.className = "mini bad";
+          btnDel.textContent = "삭제";
+          btnDel.onclick = () => {
+            picks.splice(idx, 1);
+            renderPicks();
+          };
+
+          actions.appendChild(btnCopy);
+          actions.appendChild(btnUse);
+          actions.appendChild(btnDel);
+
+          row.appendChild(nums);
+          row.appendChild(actions);
+          list.appendChild(row);
+        });
+      }
+
+      function generateSets(count) {
+        const max = premiumOn ? 30 : 10;
+        if (count > max) count = max;
+
+        const out = [];
+        for (let i = 0; i < count; i++) {
+          const r = genOneSet();
+          if (!r.ok) {
+            toast(r.err, "warn");
+            break;
+          }
+          out.push(r.nums);
+        }
+
+        picks = out;
+        // keep history for premium avoid-dup demo
+        recentPicks.push(...out);
+        if (recentPicks.length > 200) recentPicks = recentPicks.slice(-200);
+
+        renderPicks();
+        toast(`🎲 추천 ${out.length}세트 생성`);
+      }
+
+      // =========================
+      // Premium demo toggles
+      // =========================
+      function syncPremiumUI() {
+        $("premiumState").textContent = premiumOn ? "ON" : "OFF";
+        $("avoidDupState").textContent = premiumOn && avoidDupOn ? "ON" : "OFF";
+        $("btnAvoidDup").disabled = !premiumOn;
+        $("btnGen10").textContent = premiumOn ? "추천 20세트" : "추천 10세트";
+      }
+
+      $("btnPremium").onclick = () => {
+        premiumOn = !premiumOn;
+        localStorage.setItem("lucky_premium", premiumOn ? "1" : "0");
+        if (!premiumOn) {
+          avoidDupOn = false;
+          localStorage.setItem("lucky_avoiddup", "0");
+        }
+        syncPremiumUI();
+        toast(premiumOn ? "💎 프리미엄(데모) ON" : "💤 프리미엄 OFF");
+      };
+
+      $("btnAvoidDup").onclick = () => {
+        if (!premiumOn) return;
+        avoidDupOn = !avoidDupOn;
+        localStorage.setItem("lucky_avoiddup", avoidDupOn ? "1" : "0");
+        syncPremiumUI();
+        toast(avoidDupOn ? "🧠 중복 회피 ON" : "🧠 중복 회피 OFF");
+      };
+
+      // =========================
+      // Buttons
+      // =========================
+      $("btnNewSeed").onclick = () => {
+        seed = crypto.getRandomValues(new Uint32Array(1))[0] >>> 0;
+        rng = mulberry32(seed);
+        $("seedBadge").textContent = String(seed);
+        toast("🎛️ 시드 변경 완료");
+      };
+
+      $("btnGen5").onclick = () => generateSets(5);
+
+      $("btnGen10").onclick = () => {
+        if (premiumOn) generateSets(20);
+        else generateSets(10);
+      };
+
+      $("btnLucky").onclick = () => {
+        const r = genOneSet();
+        if (!r.ok) return toast(r.err, "warn");
+        picks = [r.nums];
+        recentPicks.push(r.nums);
+        renderPicks();
+        toast("✨ 오늘의 한 세트");
+      };
+
+      $("btnCopyAll").onclick = () => {
+        if (!picks.length) return toast("추천이 없어", "warn");
+        const txt = picks.map((s, i) => `${i + 1}) ${s.join(", ")}`).join("\n");
+        copyText(txt);
+      };
+
+      $("btnReset").onclick = () => {
+        locked = new Set();
+        $("excludeInput").value = "";
+        $("oddEven").value = "balanced";
+        $("maxConsecutive").value = "2";
+        $("sumMin").value = "90";
+        $("sumMax").value = "180";
+        picks = [];
+        rebuildGrid();
+        renderPicks();
+        toast("🔄 초기화 완료");
+        history.replaceState(null, "", location.pathname);
+      };
+
+      $("btnShare").onclick = async () => {
+        const url = new URL(location.href);
+        url.searchParams.set("seed", String(seed));
+        url.searchParams.set(
+          "lock",
+          [...locked].sort((a, b) => a - b).join(".")
+        );
+        url.searchParams.set(
+          "ex",
+          cleanNums($("excludeInput").value).join(".")
+        );
+        url.searchParams.set("oe", $("oddEven").value);
+        url.searchParams.set("mc", $("maxConsecutive").value);
+        url.searchParams.set("smin", $("sumMin").value);
+        url.searchParams.set("smax", $("sumMax").value);
+        url.searchParams.set("prem", premiumOn ? "1" : "0");
+        url.searchParams.set("ad", avoidDupOn ? "1" : "0");
+        await copyText(url.toString());
+        toast("🔗 링크 복사 완료");
+      };
+
+      // =========================
+      // Simulator
+      // =========================
+      function sampleUnique6(rngLocal) {
+        const s = new Set();
+        while (s.size < 6) s.add(randInt(rngLocal, 1, 45));
+        return [...s].sort((a, b) => a - b);
+      }
+
+      function drawNumbers(rngLocal) {
+        const main = sampleUnique6(rngLocal);
+        // bonus must be different from main
+        let bonus;
+        const mainSet = new Set(main);
+        do {
+          bonus = randInt(rngLocal, 1, 45);
+        } while (mainSet.has(bonus));
+        return { main, bonus };
+      }
+
+      function matchRank(ticket, draw) {
+        const mainSet = new Set(draw.main);
+        let hit = 0;
+        for (const n of ticket) if (mainSet.has(n)) hit++;
+        if (hit === 6) return 1;
+        if (hit === 5) {
+          // bonus check
+          const hasBonus = ticket.includes(draw.bonus);
+          return hasBonus ? 2 : 3;
+        }
+        if (hit === 4) return 4;
+        if (hit === 3) return 5;
+        return 0; // lose
+      }
+
+      function getPrizeMap() {
+        const p = (id) => {
+          const v = Number($(id).value);
+          return Number.isFinite(v) ? v : 0;
+        };
+        return {
+          1: p("p1"),
+          2: p("p2"),
+          3: p("p3"),
+          4: p("p4"),
+          5: p("p5"),
+          0: 0,
+        };
+      }
+
+      function fmtWon(n) {
+        const sign = n < 0 ? "-" : "";
+        const x = Math.abs(Math.trunc(n));
+        return sign + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
+      }
+
+      function runSim({ draws, ticketsPerDraw, mode, fast = false }) {
+        // speed: reduce draws for fast mode but scale results roughly
+        const scale = fast ? 0.1 : 1;
+        const simDraws = Math.max(1, Math.floor(draws * scale));
+
+        // independent RNG stream for sim (so UI generation doesn't affect)
+        const simSeed = (seed ^ 0xa5a5a5a5) >>> 0;
+        const simRng = mulberry32(simSeed);
+
+        const dist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 0: 0 };
+        const prize = getPrizeMap();
+        const price = Number($("ticketPrice").value) || 0;
+
+        // ticket source
+        let sourcePicks = picks && picks.length ? picks : [];
+        let pickIdx = 0;
+
+        let revenue = 0;
+        let spent = simDraws * ticketsPerDraw * price;
+
+        for (let d = 0; d < simDraws; d++) {
+          const draw = drawNumbers(simRng);
+
+          for (let t = 0; t < ticketsPerDraw; t++) {
+            let ticket;
+            if (mode === "usePicks" && sourcePicks.length) {
+              ticket = sourcePicks[pickIdx % sourcePicks.length];
+              pickIdx++;
+            } else {
+              ticket = sampleUnique6(simRng);
+            }
+
+            const r = matchRank(ticket, draw);
+            dist[r]++;
+
+            revenue += prize[r] || 0;
+          }
+        }
+
+        // scale back up if fast
+        if (fast) {
+          const k = draws / simDraws;
+          for (const key of Object.keys(dist)) {
+            dist[key] = Math.round(dist[key] * k);
+          }
+          revenue = Math.round(revenue * k);
+          spent = draws * ticketsPerDraw * price;
+        }
+
+        const profit = revenue - spent;
+        const roi = spent > 0 ? revenue / spent : 0;
+
+        return { dist, revenue, spent, profit, roi, simSeed };
+      }
+
+      function renderDist(dist) {
+        const rows = [
+          ["1등", "6개", dist[1]],
+          ["2등", "5+보너스", dist[2]],
+          ["3등", "5개", dist[3]],
+          ["4등", "4개", dist[4]],
+          ["5등", "3개", dist[5]],
+          ["낙첨", "0~2개", dist[0]],
+        ];
+        const body = $("distBody");
+        body.innerHTML = rows
+          .map(
+            (r) => `
+        <tr>
+          <td>${r[0]}</td>
+          <td>${r[1]}</td>
+          <td>${(r[2] ?? 0)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+        </tr>
+      `
+          )
+          .join("");
+      }
+
+      function renderSummary(res, fast) {
+        const tone = res.profit >= 0 ? "good" : "bad";
+        const roiPct = res.roi * 100;
+        const roiTxt = isFinite(roiPct) ? roiPct.toFixed(2) + "%" : "—";
+
+        const hint =
+          (Number($("p1").value) || 0) === 0 ||
+          (Number($("p2").value) || 0) === 0 ||
+          (Number($("p3").value) || 0) === 0
+            ? "※ 1~3등 당첨금은 회차별 변동이라 비워두면(0) 수익이 과소평가돼."
+            : "";
+
+        $("simSummary").innerHTML = `
+        <div class="row" style="margin-bottom:8px;">
+          <span class="pill">SIM Seed <strong>${res.simSeed}</strong></span>
+          <span class="pill">${fast ? "⚡ 빠른 모드(근사)" : "정밀 모드"}</span>
+        </div>
+        <div class="row" style="margin-bottom:8px;">
+          <span class="pill">총 지출 <strong>${fmtWon(
+            res.spent
+          )}</strong></span>
+          <span class="pill">총 당첨금 <strong>${fmtWon(
+            res.revenue
+          )}</strong></span>
+        </div>
+        <div class="row" style="margin-bottom:8px;">
+          <span class="pill">순손익 <strong class="badge ${tone}">${fmtWon(
+          res.profit
+        )}</strong></span>
+          <span class="pill">ROI <strong class="badge ${tone}">${roiTxt}</strong></span>
+        </div>
+        <div class="help">${hint}</div>
+      `;
+      }
+
+      $("btnSim").onclick = () => {
+        const draws = Math.max(1, Number($("simDraws").value) || 1);
+        const ticketsPerDraw = Math.max(1, Number($("simTickets").value) || 1);
+        const mode = $("simMode").value;
+
+        if (mode === "usePicks" && (!picks || !picks.length)) {
+          toast("추천 세트를 먼저 만들어줘", "warn");
+          return;
+        }
+
+        const res = runSim({ draws, ticketsPerDraw, mode, fast: false });
+        renderDist(res.dist);
+        renderSummary(res, false);
+        toast("🧪 시뮬레이션 완료");
+      };
+
+      $("btnSimFast").onclick = () => {
+        const draws = Math.max(1, Number($("simDraws").value) || 1);
+        const ticketsPerDraw = Math.max(1, Number($("simTickets").value) || 1);
+        const mode = $("simMode").value;
+
+        if (mode === "usePicks" && (!picks || !picks.length)) {
+          toast("추천 세트를 먼저 만들어줘", "warn");
+          return;
+        }
+
+        const res = runSim({ draws, ticketsPerDraw, mode, fast: true });
+        renderDist(res.dist);
+        renderSummary(res, true);
+        toast("⚡ 빠른 시뮬 완료");
+      };
+
+      // =========================
+      // Init from URL params
+      // =========================
+      function initFromURL() {
+        const url = new URL(location.href);
+        const s = url.searchParams.get("seed");
+        if (s && /^\d+$/.test(s)) {
+          seed = Number(s) >>> 0;
+          rng = mulberry32(seed);
+          $("seedBadge").textContent = String(seed);
+        }
+        const lock = url.searchParams.get("lock");
+        if (lock) {
+          const nums = lock
+            .split(".")
+            .map(Number)
+            .filter((n) => Number.isInteger(n) && n >= 1 && n <= 45);
+          locked = new Set(nums.slice(0, 6));
+        }
+        const ex = url.searchParams.get("ex");
+        if (ex) {
+          const nums = ex
+            .split(".")
+            .map(Number)
+            .filter((n) => Number.isInteger(n) && n >= 1 && n <= 45);
+          $("excludeInput").value = nums.join(", ");
+        }
+        const oe = url.searchParams.get("oe");
+        if (oe) $("oddEven").value = oe;
+        const mc = url.searchParams.get("mc");
+        if (mc) $("maxConsecutive").value = mc;
+        const smin = url.searchParams.get("smin");
+        const smax = url.searchParams.get("smax");
+        if (smin) $("sumMin").value = smin;
+        if (smax) $("sumMax").value = smax;
+
+        const prem = url.searchParams.get("prem");
+        const ad = url.searchParams.get("ad");
+        if (prem === "1") premiumOn = true;
+        if (ad === "1") avoidDupOn = true;
+
+        localStorage.setItem("lucky_premium", premiumOn ? "1" : "0");
+        localStorage.setItem(
+          "lucky_avoiddup",
+          premiumOn && avoidDupOn ? "1" : "0"
+        );
+      }
+
+      // =========================
+      // Boot
+      // =========================
+      initFromURL();
+      rebuildGrid();
+      renderPicks();
+      syncPremiumUI();
+    </script>
+  </body>
+</html>
