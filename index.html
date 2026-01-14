@@ -1252,7 +1252,15 @@
         document.querySelectorAll(".lang-switch button").forEach((button) => {
           button.classList.toggle("active", button.dataset.lang === nextLang);
         });
+        // Force update translations
         applyTranslations();
+        // Also update any dynamically rendered content if needed
+        if (typeof window.renderPicks === "function") {
+          window.renderPicks();
+        }
+        if (typeof window.renderHeroResult === "function" && window.currentHeroResult) {
+          window.renderHeroResult(window.currentHeroResult);
+        }
         if (options.updateUrl) {
           const url = new URL(window.location.href);
           url.searchParams.set("lang", nextLang);
