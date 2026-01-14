@@ -1260,18 +1260,27 @@
         }
       }
 
+      // Initialize language on DOM ready
+      function initLang() {
+        setLang(detectLang(), { updateUrl: false });
+        // Make t() function and currentLang globally available
+        window.t = t;
+        window.currentLang = currentLang;
+        window.setLang = setLang;
+      }
+
       document.querySelectorAll(".lang-switch button").forEach((button) => {
         button.addEventListener("click", () => {
           setLang(button.dataset.lang, { updateUrl: true });
         });
       });
 
-      setLang(detectLang(), { updateUrl: false });
-
-      // Make t() function and currentLang globally available
-      window.t = t;
-      window.currentLang = currentLang;
-      window.setLang = setLang;
+      // Initialize immediately if DOM is ready, otherwise wait
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLang);
+      } else {
+        initLang();
+      }
 
       // =========================
       // =========================
