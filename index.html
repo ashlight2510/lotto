@@ -540,26 +540,26 @@
         <!-- LEFT: Recommendation -->
         <section class="card">
           <div class="row between">
-            <h2>번호 추천</h2>
+            <h2 data-i18n="titleRecommend">번호 추천</h2>
             <div class="row">
-              <span class="pill">🎲 무작위 기반</span>
-              <span class="pill">🧪 필터는 “선호”용</span>
+              <span class="pill" data-i18n="pillRandom">🎲 무작위 기반</span>
+              <span class="pill" data-i18n="pillFilter">🧪 필터는 "선호"용</span>
             </div>
           </div>
           <div class="hero-result" id="heroLuckyResult" aria-live="polite">
-            <div class="placeholder">아직 오늘의 한 세트가 없어.</div>
+            <div class="placeholder" data-i18n="placeholderNoSet">아직 오늘의 한 세트가 없어.</div>
           </div>
           <div class="hero-action">
-            <button id="btnLucky">✨ 오늘의 한 세트</button>
+            <button id="btnLucky" data-i18n="btnLucky">✨ 오늘의 한 세트</button>
           </div>
 
           <div class="field">
             <label>
-              <span>고정(포함) 번호</span>
-              <span class="muted">최대 6개</span>
+              <span data-i18n="labelLockNumbers">고정(포함) 번호</span>
+              <span class="muted" data-i18n="labelMax6">최대 6개</span>
             </label>
             <div class="ball-grid" id="gridLock"></div>
-            <div class="help">
+            <div class="help" data-i18n-html="helpLockNumbers">
               번호를 눌러 <span class="badge good">고정</span>으로 만들면 추천에
               반드시 포함돼.
             </div>
@@ -567,41 +567,42 @@
 
           <div class="field" style="margin-top: 10px">
             <label>
-              <span>제외 번호</span>
-              <span class="muted">콤마/공백 OK</span>
+              <span data-i18n="labelExcludeNumbers">제외 번호</span>
+              <span class="muted" data-i18n="labelCommaOk">콤마/공백 OK</span>
             </label>
             <input
               id="excludeInput"
               type="text"
+              data-i18n-placeholder="placeholderExclude"
               placeholder="예: 1, 7, 13, 22"
             />
-            <div class="help">제외한 번호는 추천에서 뽑지 않아.</div>
+            <div class="help" data-i18n="helpExclude">제외한 번호는 추천에서 뽑지 않아.</div>
           </div>
 
           <div class="controls" style="margin-top: 10px">
             <div class="field">
               <label
-                ><span>홀짝 옵션</span><span class="muted">선택</span></label
+                ><span data-i18n="labelOddEven">홀짝 옵션</span><span class="muted" data-i18n="labelSelect">선택</span></label
               >
               <select id="oddEven">
-                <option value="any">상관없음</option>
-                <option value="balanced" selected>
+                <option value="any" data-i18n="optionAny">상관없음</option>
+                <option value="balanced" selected data-i18n="optionBalanced">
                   대체로 균형(2~4개 홀수)
                 </option>
-                <option value="odd">홀수 위주(4~6개)</option>
-                <option value="even">짝수 위주(4~6개)</option>
+                <option value="odd" data-i18n="optionOdd">홀수 위주(4~6개)</option>
+                <option value="even" data-i18n="optionEven">짝수 위주(4~6개)</option>
               </select>
             </div>
             <div class="field">
               <label
-                ><span>연속 숫자 제한</span
-                ><span class="muted">최대 길이</span></label
+                ><span data-i18n="labelConsecutive">연속 숫자 제한</span
+                ><span class="muted" data-i18n="labelMaxLength">최대 길이</span></label
               >
               <select id="maxConsecutive">
-                <option value="6">상관없음</option>
-                <option value="3">최대 3연속</option>
-                <option value="2" selected>최대 2연속</option>
-                <option value="1">연속 금지</option>
+                <option value="6" data-i18n="optionAny">상관없음</option>
+                <option value="3" data-i18n="optionMax3">최대 3연속</option>
+                <option value="2" selected data-i18n="optionMax2">최대 2연속</option>
+                <option value="1" data-i18n="optionNoConsecutive">연속 금지</option>
               </select>
             </div>
           </div>
@@ -609,13 +610,13 @@
           <div class="controls" style="margin-top: 10px">
             <div class="field">
               <label
-                ><span>합계 최소</span><span class="muted">1~270</span></label
+                ><span data-i18n="labelSumMin">합계 최소</span><span class="muted" data-i18n="labelRange">1~270</span></label
               >
               <input id="sumMin" type="number" min="1" max="270" value="90" />
             </div>
             <div class="field">
               <label
-                ><span>합계 최대</span><span class="muted">1~270</span></label
+                ><span data-i18n="labelSumMax">합계 최대</span><span class="muted" data-i18n="labelRange">1~270</span></label
               >
               <input id="sumMax" type="number" min="1" max="270" value="180" />
             </div>
@@ -623,14 +624,14 @@
 
           <div class="row between" style="margin-top: 12px">
             <div class="row">
-              <button id="btnGen5">추천 5세트</button>
-              <button id="btnGen10" class="ghost">추천 10세트</button>
+              <button id="btnGen5" data-i18n="btnGen5">추천 5세트</button>
+              <button id="btnGen10" class="ghost" data-i18n="btnGen10">추천 10세트</button>
             </div>
             <div class="row">
               <span class="pill"
                 >Seed <span class="kbd" id="seedBadge">auto</span></span
               >
-              <button id="btnNewSeed" class="ghost" title="랜덤 시드 변경">
+              <button id="btnNewSeed" class="ghost" data-i18n-title="titleNewSeed" data-i18n="btnNewSeed">
                 🎛️ 시드 변경
               </button>
             </div>
@@ -641,35 +642,35 @@
           <div class="premium">
             <div class="row">
               <div>
-                <div style="font-weight: 900">프리미엄(데모)</div>
-                <div class="muted" style="margin-top: 4px">
+                <div style="font-weight: 900" data-i18n="titlePremium">프리미엄(데모)</div>
+                <div class="muted" style="margin-top: 4px" data-i18n="descPremium">
                   실결제는 미구현. UI/흐름만.
                 </div>
               </div>
               <div class="row">
-                <button id="btnPremium" class="ghost">
+                <button id="btnPremium" class="ghost" data-i18n="btnPremium">
                   💎 프리미엄 켜기/끄기
                 </button>
               </div>
             </div>
-            <div class="help">
-              프리미엄 ON이면: 추천 세트 최대 30개, “중복 회피(최근 추천과 겹침
-              최소화)” 옵션이 활성화돼.
+            <div class="help" data-i18n="helpPremium">
+              프리미엄 ON이면: 추천 세트 최대 30개, "중복 회피(최근 추천과 겹침
+              최소화)" 옵션이 활성화돼.
             </div>
             <div class="row" style="margin-top: 10px">
               <span class="pill"
-                >상태: <strong id="premiumState">OFF</strong></span
+                ><span data-i18n="labelStatus">상태:</span> <strong id="premiumState">OFF</strong></span
               >
               <span class="pill"
-                >옵션: <strong id="avoidDupState">OFF</strong></span
+                ><span data-i18n="labelOption">옵션:</span> <strong id="avoidDupState">OFF</strong></span
               >
-              <button id="btnAvoidDup" class="mini good">중복 회피 토글</button>
+              <button id="btnAvoidDup" class="mini good" data-i18n="btnAvoidDup">중복 회피 토글</button>
             </div>
           </div>
 
           <div class="sep"></div>
-          <div class="help">
-            ⚠️ 참고: 추천은 “무작위 + 필터”라서 당첨 확률을 높여준다고 말할
+          <div class="help" data-i18n="helpNote">
+            ⚠️ 참고: 추천은 "무작위 + 필터"라서 당첨 확률을 높여준다고 말할
             근거는 없어. (그냥 취향대로 번호를 뽑기 쉽게 해주는 도구)
           </div>
         </section>
@@ -677,17 +678,17 @@
         <!-- RIGHT: Simulator -->
         <aside class="card">
           <div class="row between">
-            <h2>시뮬레이션</h2>
+            <h2 data-i18n="titleSimulation">시뮬레이션</h2>
             <div class="row">
-              <span class="pill">🧾 비용/당첨 통계</span>
+              <span class="pill" data-i18n="pillStats">🧾 비용/당첨 통계</span>
             </div>
           </div>
 
           <div class="controls">
             <div class="field">
               <label
-                ><span>회차(추첨) 수</span
-                ><span class="muted">예: 200</span></label
+                ><span data-i18n="labelDraws">회차(추첨) 수</span
+                ><span class="muted" data-i18n="labelExample">예: 200</span></label
               >
               <input
                 id="simDraws"
@@ -699,8 +700,8 @@
             </div>
             <div class="field">
               <label
-                ><span>회차당 구매 장수</span
-                ><span class="muted">예: 5</span></label
+                ><span data-i18n="labelTicketsPerDraw">회차당 구매 장수</span
+                ><span class="muted" data-i18n="labelExample">예: 5</span></label
               >
               <input
                 id="simTickets"
@@ -714,8 +715,8 @@
 
           <div class="field" style="margin-top: 10px">
             <label
-              ><span>티켓 가격(원)</span
-              ><span class="muted">기본 1,000</span></label
+              ><span data-i18n="labelTicketPrice">티켓 가격(원)</span
+              ><span class="muted" data-i18n="labelDefault">기본 1,000</span></label
             >
             <input
               id="ticketPrice"
@@ -724,16 +725,15 @@
               step="100"
               value="1000"
             />
-            <div class="help">
+            <div class="help" data-i18n="helpTicketPrice">
               로또 6/45는 1게임 1,000원 안내가 있어.
-              :contentReference[oaicite:3]{index=3}
             </div>
           </div>
 
           <div class="field" style="margin-top: 10px">
             <label
-              ><span>당첨금(원)</span
-              ><span class="muted">1~3등은 회차별 변동</span></label
+              ><span data-i18n="labelPrizes">당첨금(원)</span
+              ><span class="muted" data-i18n="labelVariable">1~3등은 회차별 변동</span></label
             >
             <div class="controls">
               <div>
@@ -745,13 +745,14 @@
                     font-size: 12px;
                     margin-bottom: 6px;
                   "
-                  >1등(6개 일치)</label
+                  data-i18n="label1st">1등(6개 일치)</label
                 >
                 <input
                   id="p1"
                   type="number"
                   min="0"
                   step="1000000"
+                  data-i18n-placeholder="placeholderExample"
                   placeholder="예: 2000000000"
                 />
               </div>
@@ -764,13 +765,14 @@
                     font-size: 12px;
                     margin-bottom: 6px;
                   "
-                  >2등(5+보너스)</label
+                  data-i18n="label2nd">2등(5+보너스)</label
                 >
                 <input
                   id="p2"
                   type="number"
                   min="0"
                   step="100000"
+                  data-i18n-placeholder="placeholderExample2"
                   placeholder="예: 50000000"
                 />
               </div>
@@ -783,13 +785,14 @@
                     font-size: 12px;
                     margin-bottom: 6px;
                   "
-                  >3등(5개)</label
+                  data-i18n="label3rd">3등(5개)</label
                 >
                 <input
                   id="p3"
                   type="number"
                   min="0"
                   step="10000"
+                  data-i18n-placeholder="placeholderExample3"
                   placeholder="예: 1500000"
                 />
               </div>
@@ -802,7 +805,7 @@
                     font-size: 12px;
                     margin-bottom: 6px;
                   "
-                  >4등(4개)</label
+                  data-i18n="label4th">4등(4개)</label
                 >
                 <input
                   id="p4"
@@ -821,100 +824,100 @@
                     font-size: 12px;
                     margin-bottom: 6px;
                   "
-                  >5등(3개)</label
+                  data-i18n="label5th">5등(3개)</label
                 >
                 <input id="p5" type="number" min="0" step="1000" value="5000" />
               </div>
             </div>
-            <div class="help">
+            <div class="help" data-i18n="helpPrizes">
               등위 기준(2등=5개+보너스, 3등=5개, 4등=4개, 5등=3개)은 당첨결과
-              안내에서 확인돼. :contentReference[oaicite:4]{index=4}
+              안내에서 확인돼.
             </div>
           </div>
 
           <div class="field" style="margin-top: 10px">
             <label
-              ><span>시뮬레이션 모드</span
-              ><span class="muted">추천/랜덤</span></label
+              ><span data-i18n="labelSimMode">시뮬레이션 모드</span
+              ><span class="muted" data-i18n="labelRecommendRandom">추천/랜덤</span></label
             >
             <select id="simMode">
-              <option value="random" selected>매번 완전 랜덤</option>
-              <option value="usePicks">현재 추천 세트에서 순환 사용</option>
+              <option value="random" selected data-i18n="optionRandom">매번 완전 랜덤</option>
+              <option value="usePicks" data-i18n="optionUsePicks">현재 추천 세트에서 순환 사용</option>
             </select>
-            <div class="help">
-              “추천 세트 사용”은 추천이 잘 맞는지 보여주는 게 아니라, 그냥 그
+            <div class="help" data-i18n="helpSimMode">
+              "추천 세트 사용"은 추천이 잘 맞는지 보여주는 게 아니라, 그냥 그
               세트로 계속 샀을 때의 결과를 보는 용도.
             </div>
           </div>
 
           <div class="row" style="margin-top: 12px">
-            <button id="btnSim">시뮬레이션 실행</button>
-            <button id="btnSimFast" class="ghost">⚡ 빠르게(표본 축소)</button>
+            <button id="btnSim" data-i18n="btnSim">시뮬레이션 실행</button>
+            <button id="btnSimFast" class="ghost" data-i18n="btnSimFast">⚡ 빠르게(표본 축소)</button>
           </div>
 
           <div class="sep"></div>
 
           <div class="field">
             <label
-              ><span>결과 요약</span><span class="muted">ROI/수익</span></label
+              ><span data-i18n="labelSummary">결과 요약</span><span class="muted" data-i18n="labelROI">ROI/수익</span></label
             >
-            <div class="help" id="simSummary">설정 후 실행해줘.</div>
+            <div class="help" id="simSummary" data-i18n="helpBeforeRun">설정 후 실행해줘.</div>
           </div>
 
           <div class="field" style="margin-top: 10px">
-            <label><span>당첨 분포</span><span class="muted">횟수</span></label>
+            <label><span data-i18n="labelDistribution">당첨 분포</span><span class="muted" data-i18n="labelCount">횟수</span></label>
             <table>
               <thead>
                 <tr>
-                  <th>등수</th>
-                  <th>기준</th>
-                  <th>당첨 횟수</th>
+                  <th data-i18n="tableRank">등수</th>
+                  <th data-i18n="tableCriteria">기준</th>
+                  <th data-i18n="tableWins">당첨 횟수</th>
                 </tr>
               </thead>
               <tbody id="distBody">
                 <tr>
-                  <td>1등</td>
-                  <td>6개</td>
+                  <td data-i18n="rank1st">1등</td>
+                  <td data-i18n="criteria6">6개</td>
                   <td>—</td>
                 </tr>
                 <tr>
-                  <td>2등</td>
-                  <td>5+보너스</td>
+                  <td data-i18n="rank2nd">2등</td>
+                  <td data-i18n="criteria5Bonus">5+보너스</td>
                   <td>—</td>
                 </tr>
                 <tr>
-                  <td>3등</td>
-                  <td>5개</td>
+                  <td data-i18n="rank3rd">3등</td>
+                  <td data-i18n="criteria5">5개</td>
                   <td>—</td>
                 </tr>
                 <tr>
-                  <td>4등</td>
-                  <td>4개</td>
+                  <td data-i18n="rank4th">4등</td>
+                  <td data-i18n="criteria4">4개</td>
                   <td>—</td>
                 </tr>
                 <tr>
-                  <td>5등</td>
-                  <td>3개</td>
+                  <td data-i18n="rank5th">5등</td>
+                  <td data-i18n="criteria3">3개</td>
                   <td>—</td>
                 </tr>
                 <tr>
-                  <td>낙첨</td>
-                  <td>0~2개</td>
+                  <td data-i18n="rankLose">낙첨</td>
+                  <td data-i18n="criteria0to2">0~2개</td>
                   <td>—</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="help" style="margin-top: 12px">
-            팁: <span class="kbd">추천 10세트</span> 만든 뒤 “추천 세트
-            순환”으로 돌리면, “그 번호로 계속 샀을 때”의 감각을 볼 수 있어.
+          <div class="help" style="margin-top: 12px" data-i18n-html="helpTip">
+            팁: <span class="kbd">추천 10세트</span> 만든 뒤 "추천 세트
+            순환"으로 돌리면, "그 번호로 계속 샀을 때"의 감각을 볼 수 있어.
           </div>
         </aside>
       </div>
     </div>
 
-    <div id="toast" class="toast" role="status" aria-live="polite">
+    <div id="toast" class="toast" role="status" aria-live="polite" data-i18n="toastCopy">
       ✅ 복사했어
     </div>
 
@@ -935,6 +938,124 @@
           btnReset: "초기화",
           btnResetTitle: "초기화",
           toastCopy: "✅ 복사했어",
+          titleRecommend: "번호 추천",
+          pillRandom: "🎲 무작위 기반",
+          pillFilter: "🧪 필터는 \"선호\"용",
+          placeholderNoSet: "아직 오늘의 한 세트가 없어.",
+          btnLucky: "✨ 오늘의 한 세트",
+          labelLockNumbers: "고정(포함) 번호",
+          labelMax6: "최대 6개",
+          helpLockNumbers: "번호를 눌러 <span class=\"badge good\">고정</span>으로 만들면 추천에 반드시 포함돼.",
+          labelExcludeNumbers: "제외 번호",
+          labelCommaOk: "콤마/공백 OK",
+          placeholderExclude: "예: 1, 7, 13, 22",
+          helpExclude: "제외한 번호는 추천에서 뽑지 않아.",
+          labelOddEven: "홀짝 옵션",
+          labelSelect: "선택",
+          optionAny: "상관없음",
+          optionBalanced: "대체로 균형(2~4개 홀수)",
+          optionOdd: "홀수 위주(4~6개)",
+          optionEven: "짝수 위주(4~6개)",
+          labelConsecutive: "연속 숫자 제한",
+          labelMaxLength: "최대 길이",
+          optionMax3: "최대 3연속",
+          optionMax2: "최대 2연속",
+          optionNoConsecutive: "연속 금지",
+          labelSumMin: "합계 최소",
+          labelSumMax: "합계 최대",
+          labelRange: "1~270",
+          btnGen5: "추천 5세트",
+          btnGen10: "추천 10세트",
+          btnGen20: "추천 20세트",
+          btnNewSeed: "🎛️ 시드 변경",
+          titleNewSeed: "랜덤 시드 변경",
+          titlePremium: "프리미엄(데모)",
+          descPremium: "실결제는 미구현. UI/흐름만.",
+          btnPremium: "💎 프리미엄 켜기/끄기",
+          helpPremium: "프리미엄 ON이면: 추천 세트 최대 30개, \"중복 회피(최근 추천과 겹침 최소화)\" 옵션이 활성화돼.",
+          labelStatus: "상태:",
+          labelOption: "옵션:",
+          btnAvoidDup: "중복 회피 토글",
+          helpNote: "⚠️ 참고: 추천은 \"무작위 + 필터\"라서 당첨 확률을 높여준다고 말할 근거는 없어. (그냥 취향대로 번호를 뽑기 쉽게 해주는 도구)",
+          titleSimulation: "시뮬레이션",
+          pillStats: "🧾 비용/당첨 통계",
+          labelDraws: "회차(추첨) 수",
+          labelExample: "예: 200",
+          labelTicketsPerDraw: "회차당 구매 장수",
+          labelTicketPrice: "티켓 가격(원)",
+          labelDefault: "기본 1,000",
+          helpTicketPrice: "로또 6/45는 1게임 1,000원 안내가 있어.",
+          labelPrizes: "당첨금(원)",
+          labelVariable: "1~3등은 회차별 변동",
+          label1st: "1등(6개 일치)",
+          label2nd: "2등(5+보너스)",
+          label3rd: "3등(5개)",
+          label4th: "4등(4개)",
+          label5th: "5등(3개)",
+          placeholderExample: "예: 2000000000",
+          placeholderExample2: "예: 50000000",
+          placeholderExample3: "예: 1500000",
+          helpPrizes: "등위 기준(2등=5개+보너스, 3등=5개, 4등=4개, 5등=3개)은 당첨결과 안내에서 확인돼.",
+          labelSimMode: "시뮬레이션 모드",
+          labelRecommendRandom: "추천/랜덤",
+          optionRandom: "매번 완전 랜덤",
+          optionUsePicks: "현재 추천 세트에서 순환 사용",
+          helpSimMode: "\"추천 세트 사용\"은 추천이 잘 맞는지 보여주는 게 아니라, 그냥 그 세트로 계속 샀을 때의 결과를 보는 용도.",
+          btnSim: "시뮬레이션 실행",
+          btnSimFast: "⚡ 빠르게(표본 축소)",
+          labelSummary: "결과 요약",
+          labelROI: "ROI/수익",
+          helpBeforeRun: "설정 후 실행해줘.",
+          labelDistribution: "당첨 분포",
+          labelCount: "횟수",
+          tableRank: "등수",
+          tableCriteria: "기준",
+          tableWins: "당첨 횟수",
+          rank1st: "1등",
+          rank2nd: "2등",
+          rank3rd: "3등",
+          rank4th: "4등",
+          rank5th: "5등",
+          rankLose: "낙첨",
+          criteria6: "6개",
+          criteria5Bonus: "5+보너스",
+          criteria5: "5개",
+          criteria4: "4개",
+          criteria3: "3개",
+          criteria0to2: "0~2개",
+          helpTip: "팁: <span class=\"kbd\">추천 10세트</span> 만든 뒤 \"추천 세트 순환\"으로 돌리면, \"그 번호로 계속 샀을 때\"의 감각을 볼 수 있어.",
+          emptyPicks: "아직 추천이 없어. 위에서 \"추천 5세트\" 눌러봐.",
+          btnCopy: "복사",
+          btnUse: "고정으로",
+          btnDelete: "삭제",
+          toastExcludeLock: "제외 번호는 고정할 수 없어",
+          toastMaxLock: "고정은 최대 6개",
+          toastLockConflict: "고정 번호와 제외 번호가 겹쳐.",
+          toastLockExceed: "고정 번호가 6개를 초과했어.",
+          toastCannotGenerate: "제외/고정 설정 때문에 6개를 만들 수 없어.",
+          toastFilterTooStrict: "필터가 너무 빡세서 추천 생성 실패. (합계/연속/홀짝을 완화해봐)",
+          toastNoPicks: "추천이 없어",
+          toastFixed: "✅ 고정 번호로 적용했어",
+          toastReset: "🔄 초기화 완료",
+          toastLinkCopied: "🔗 링크 복사 완료",
+          toastGenSets: "🎲 추천 {count}세트 생성",
+          toastPremiumOn: "💎 프리미엄(데모) ON",
+          toastPremiumOff: "💤 프리미엄 OFF",
+          toastAvoidDupOn: "🧠 중복 회피 ON",
+          toastAvoidDupOff: "🧠 중복 회피 OFF",
+          toastSeedChanged: "🎛️ 시드 변경 완료",
+          toastLucky: "✨ 오늘의 한 세트",
+          toastSimComplete: "🧪 시뮬레이션 완료",
+          toastSimFast: "⚡ 빠른 시뮬 완료",
+          toastNeedPicks: "추천 세트를 먼저 만들어줘",
+          simSeed: "SIM Seed",
+          fastMode: "⚡ 빠른 모드(근사)",
+          preciseMode: "정밀 모드",
+          totalSpent: "총 지출",
+          totalRevenue: "총 당첨금",
+          netProfit: "순손익",
+          roi: "ROI",
+          hintPrizes: "※ 1~3등 당첨금은 회차별 변동이라 비워두면(0) 수익이 과소평가돼.",
         },
         en: {
           metaTitle: "LuckyLab — Lotto 6/45 Simulator & Picks",
@@ -948,6 +1069,124 @@
           btnReset: "Reset",
           btnResetTitle: "Reset",
           toastCopy: "✅ Copied",
+          titleRecommend: "Number Recommendations",
+          pillRandom: "🎲 Random-based",
+          pillFilter: "🧪 Filters are for \"preference\"",
+          placeholderNoSet: "No set for today yet.",
+          btnLucky: "✨ Today's One Set",
+          labelLockNumbers: "Lock (Include) Numbers",
+          labelMax6: "Max 6",
+          helpLockNumbers: "Click a number to <span class=\"badge good\">lock</span> it, and it will be included in recommendations.",
+          labelExcludeNumbers: "Exclude Numbers",
+          labelCommaOk: "Comma/space OK",
+          placeholderExclude: "e.g. 1, 7, 13, 22",
+          helpExclude: "Excluded numbers will not be picked in recommendations.",
+          labelOddEven: "Odd/Even Option",
+          labelSelect: "Select",
+          optionAny: "Any",
+          optionBalanced: "Generally balanced (2~4 odd)",
+          optionOdd: "Odd-focused (4~6)",
+          optionEven: "Even-focused (4~6)",
+          labelConsecutive: "Consecutive Number Limit",
+          labelMaxLength: "Max length",
+          optionMax3: "Max 3 consecutive",
+          optionMax2: "Max 2 consecutive",
+          optionNoConsecutive: "No consecutive",
+          labelSumMin: "Sum Minimum",
+          labelSumMax: "Sum Maximum",
+          labelRange: "1~270",
+          btnGen5: "Recommend 5 Sets",
+          btnGen10: "Recommend 10 Sets",
+          btnGen20: "Recommend 20 Sets",
+          btnNewSeed: "🎛️ Change Seed",
+          titleNewSeed: "Change random seed",
+          titlePremium: "Premium (Demo)",
+          descPremium: "Payment not implemented. UI/flow only.",
+          btnPremium: "💎 Toggle Premium",
+          helpPremium: "When Premium is ON: Maximum 30 recommendation sets, \"Avoid Duplicates (minimize overlap with recent recommendations)\" option is activated.",
+          labelStatus: "Status:",
+          labelOption: "Option:",
+          btnAvoidDup: "Toggle Avoid Duplicates",
+          helpNote: "⚠️ Note: Recommendations are \"random + filter\", so there's no basis to say they increase winning probability. (Just a tool to easily pick numbers according to preference)",
+          titleSimulation: "Simulation",
+          pillStats: "🧾 Cost/Prize Statistics",
+          labelDraws: "Number of Draws",
+          labelExample: "e.g. 200",
+          labelTicketsPerDraw: "Tickets per Draw",
+          labelTicketPrice: "Ticket Price (KRW)",
+          labelDefault: "Default 1,000",
+          helpTicketPrice: "Lotto 6/45 is 1,000 KRW per game.",
+          labelPrizes: "Prize Money (KRW)",
+          labelVariable: "1st~3rd vary by draw",
+          label1st: "1st (6 matches)",
+          label2nd: "2nd (5+bonus)",
+          label3rd: "3rd (5 matches)",
+          label4th: "4th (4 matches)",
+          label5th: "5th (3 matches)",
+          placeholderExample: "e.g. 2000000000",
+          placeholderExample2: "e.g. 50000000",
+          placeholderExample3: "e.g. 1500000",
+          helpPrizes: "Ranking criteria (2nd=5+bonus, 3rd=5, 4th=4, 5th=3) can be confirmed in prize result information.",
+          labelSimMode: "Simulation Mode",
+          labelRecommendRandom: "Recommend/Random",
+          optionRandom: "Completely random each time",
+          optionUsePicks: "Cycle through current recommendation sets",
+          helpSimMode: "\"Use recommendation sets\" is not to show if recommendations are accurate, but to see the results if you kept buying with those sets.",
+          btnSim: "Run Simulation",
+          btnSimFast: "⚡ Fast (reduced sample)",
+          labelSummary: "Result Summary",
+          labelROI: "ROI/Profit",
+          helpBeforeRun: "Please run after setting up.",
+          labelDistribution: "Prize Distribution",
+          labelCount: "Count",
+          tableRank: "Rank",
+          tableCriteria: "Criteria",
+          tableWins: "Wins",
+          rank1st: "1st",
+          rank2nd: "2nd",
+          rank3rd: "3rd",
+          rank4th: "4th",
+          rank5th: "5th",
+          rankLose: "Lose",
+          criteria6: "6",
+          criteria5Bonus: "5+bonus",
+          criteria5: "5",
+          criteria4: "4",
+          criteria3: "3",
+          criteria0to2: "0~2",
+          helpTip: "Tip: After creating <span class=\"kbd\">10 recommendation sets</span>, run with \"Cycle recommendation sets\" to see the sense of \"if you kept buying with those numbers\".",
+          emptyPicks: "No recommendations yet. Click \"Recommend 5 Sets\" above.",
+          btnCopy: "Copy",
+          btnUse: "Use as Lock",
+          btnDelete: "Delete",
+          toastExcludeLock: "Excluded numbers cannot be locked",
+          toastMaxLock: "Maximum 6 locks",
+          toastLockConflict: "Locked and excluded numbers overlap.",
+          toastLockExceed: "Locked numbers exceed 6.",
+          toastCannotGenerate: "Cannot create 6 numbers due to exclude/lock settings.",
+          toastFilterTooStrict: "Recommendation generation failed due to strict filters. (Try relaxing sum/consecutive/odd-even)",
+          toastNoPicks: "No recommendations",
+          toastFixed: "✅ Applied as locked numbers",
+          toastReset: "🔄 Reset complete",
+          toastLinkCopied: "🔗 Link copied",
+          toastGenSets: "🎲 Generated {count} recommendation sets",
+          toastPremiumOn: "💎 Premium (Demo) ON",
+          toastPremiumOff: "💤 Premium OFF",
+          toastAvoidDupOn: "🧠 Avoid Duplicates ON",
+          toastAvoidDupOff: "🧠 Avoid Duplicates OFF",
+          toastSeedChanged: "🎛️ Seed changed",
+          toastLucky: "✨ Today's one set",
+          toastSimComplete: "🧪 Simulation complete",
+          toastSimFast: "⚡ Fast simulation complete",
+          toastNeedPicks: "Please create recommendation sets first",
+          simSeed: "SIM Seed",
+          fastMode: "⚡ Fast mode (approximate)",
+          preciseMode: "Precise mode",
+          totalSpent: "Total Spent",
+          totalRevenue: "Total Prize",
+          netProfit: "Net Profit",
+          roi: "ROI",
+          hintPrizes: "※ If 1st~3rd prize money is left empty (0), profit will be underestimated as they vary by draw.",
         },
       };
 
@@ -978,6 +1217,13 @@
         });
         document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
           el.placeholder = t(el.dataset.i18nPlaceholder);
+        });
+        document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+          el.innerHTML = t(el.dataset.i18nHtml);
+        });
+        // Update select options
+        document.querySelectorAll("select option[data-i18n]").forEach((option) => {
+          option.textContent = t(option.dataset.i18n);
         });
       }
 
@@ -1121,9 +1367,10 @@
           if (isBlocked) b.classList.add("block");
 
           b.onclick = () => {
+            const t = window.t || ((key) => key);
             const excludedNow = new Set(cleanNums($("excludeInput").value));
             if (excludedNow.has(n)) {
-              toast("제외 번호는 고정할 수 없어", "warn");
+              toast(t("toastExcludeLock"), "warn");
               return;
             }
 
@@ -1131,7 +1378,7 @@
               locked.delete(n);
             } else {
               if (locked.size >= 6) {
-                toast("고정은 최대 6개", "warn");
+                toast(t("toastMaxLock"), "warn");
                 return;
               }
               locked.add(n);
@@ -1199,16 +1446,17 @@
       }
 
       function genOneSet() {
+        const t = window.t || ((key) => key);
         const excluded = new Set(cleanNums($("excludeInput").value));
         // lock & exclude conflict already prevented in UI, but re-check
         for (const x of locked) {
           if (excluded.has(x))
-            return { ok: false, err: "고정 번호와 제외 번호가 겹쳐." };
+            return { ok: false, err: t("toastLockConflict") };
         }
 
         const base = [...locked];
         if (base.length > 6)
-          return { ok: false, err: "고정 번호가 6개를 초과했어." };
+          return { ok: false, err: t("toastLockExceed") };
 
         const pool = [];
         for (let n = 1; n <= 45; n++) {
@@ -1219,7 +1467,7 @@
         if (pool.length + base.length < 6)
           return {
             ok: false,
-            err: "제외/고정 설정 때문에 6개를 만들 수 없어.",
+            err: t("toastCannotGenerate"),
           };
 
         const tryLimit = 8000;
@@ -1240,7 +1488,7 @@
         }
         return {
           ok: false,
-          err: "필터가 너무 빡세서 추천 생성 실패. (합계/연속/홀짝을 완화해봐)",
+          err: t("toastFilterTooStrict"),
         };
       }
 
@@ -1252,9 +1500,10 @@
         list.innerHTML = "";
 
         if (!picks.length) {
+          const t = window.t || ((key) => key);
           const empty = document.createElement("div");
           empty.className = "help";
-          empty.textContent = "아직 추천이 없어. 위에서 “추천 5세트” 눌러봐.";
+          empty.textContent = t("emptyPicks");
           list.appendChild(empty);
           return;
         }
@@ -1275,23 +1524,24 @@
           const actions = document.createElement("div");
           actions.className = "row";
 
+          const t = window.t || ((key) => key);
           const btnCopy = document.createElement("button");
           btnCopy.className = "mini good";
-          btnCopy.textContent = "복사";
+          btnCopy.textContent = t("btnCopy");
           btnCopy.onclick = () => copyText(set.join(", "));
 
           const btnUse = document.createElement("button");
           btnUse.className = "mini";
-          btnUse.textContent = "고정으로";
+          btnUse.textContent = t("btnUse");
           btnUse.onclick = () => {
             locked = new Set(set);
             rebuildGrid();
-            toast("✅ 고정 번호로 적용했어");
+            toast(t("toastFixed"));
           };
 
           const btnDel = document.createElement("button");
           btnDel.className = "mini bad";
-          btnDel.textContent = "삭제";
+          btnDel.textContent = t("btnDelete");
           btnDel.onclick = () => {
             picks.splice(idx, 1);
             renderPicks();
@@ -1308,12 +1558,13 @@
       }
 
       function renderHeroResult(nums) {
+        const t = window.t || ((key) => key);
         const box = $("heroLuckyResult");
         box.innerHTML = "";
         if (!nums || !nums.length) {
           const msg = document.createElement("div");
           msg.className = "placeholder";
-          msg.textContent = "아직 오늘의 한 세트가 없어.";
+          msg.textContent = t("placeholderNoSet");
           box.appendChild(msg);
           return;
         }
@@ -1329,6 +1580,7 @@
         const max = premiumOn ? 30 : 10;
         if (count > max) count = max;
 
+        const t = window.t || ((key, vars = {}) => key);
         const out = [];
         for (let i = 0; i < count; i++) {
           const r = genOneSet();
@@ -1345,20 +1597,22 @@
         if (recentPicks.length > 200) recentPicks = recentPicks.slice(-200);
 
         renderPicks();
-        toast(`🎲 추천 ${out.length}세트 생성`);
+        toast(t("toastGenSets", { count: out.length }));
       }
 
       // =========================
       // Premium demo toggles
       // =========================
       function syncPremiumUI() {
+        const t = window.t || ((key) => key);
         $("premiumState").textContent = premiumOn ? "ON" : "OFF";
         $("avoidDupState").textContent = premiumOn && avoidDupOn ? "ON" : "OFF";
         $("btnAvoidDup").disabled = !premiumOn;
-        $("btnGen10").textContent = premiumOn ? "추천 20세트" : "추천 10세트";
+        $("btnGen10").textContent = premiumOn ? t("btnGen20") : t("btnGen10");
       }
 
       $("btnPremium").onclick = () => {
+        const t = window.t || ((key) => key);
         premiumOn = !premiumOn;
         localStorage.setItem("lucky_premium", premiumOn ? "1" : "0");
         if (!premiumOn) {
@@ -1366,25 +1620,27 @@
           localStorage.setItem("lucky_avoiddup", "0");
         }
         syncPremiumUI();
-        toast(premiumOn ? "💎 프리미엄(데모) ON" : "💤 프리미엄 OFF");
+        toast(premiumOn ? t("toastPremiumOn") : t("toastPremiumOff"));
       };
 
       $("btnAvoidDup").onclick = () => {
+        const t = window.t || ((key) => key);
         if (!premiumOn) return;
         avoidDupOn = !avoidDupOn;
         localStorage.setItem("lucky_avoiddup", avoidDupOn ? "1" : "0");
         syncPremiumUI();
-        toast(avoidDupOn ? "🧠 중복 회피 ON" : "🧠 중복 회피 OFF");
+        toast(avoidDupOn ? t("toastAvoidDupOn") : t("toastAvoidDupOff"));
       };
 
       // =========================
       // Buttons
       // =========================
       $("btnNewSeed").onclick = () => {
+        const t = window.t || ((key) => key);
         seed = crypto.getRandomValues(new Uint32Array(1))[0] >>> 0;
         rng = mulberry32(seed);
         $("seedBadge").textContent = String(seed);
-        toast("🎛️ 시드 변경 완료");
+        toast(t("toastSeedChanged"));
       };
 
       $("btnGen5").onclick = () => generateSets(5);
@@ -1395,22 +1651,25 @@
       };
 
       $("btnLucky").onclick = () => {
+        const t = window.t || ((key) => key);
         const r = genOneSet();
         if (!r.ok) return toast(r.err, "warn");
         picks = [r.nums];
         recentPicks.push(r.nums);
         renderHeroResult(r.nums);
         renderPicks();
-        toast("✨ 오늘의 한 세트");
+        toast(t("toastLucky"));
       };
 
       $("btnCopyAll").onclick = () => {
-        if (!picks.length) return toast("추천이 없어", "warn");
+        const t = window.t || ((key) => key);
+        if (!picks.length) return toast(t("toastNoPicks"), "warn");
         const txt = picks.map((s, i) => `${i + 1}) ${s.join(", ")}`).join("\n");
         copyText(txt);
       };
 
       $("btnReset").onclick = () => {
+        const t = window.t || ((key) => key);
         locked = new Set();
         $("excludeInput").value = "";
         $("oddEven").value = "balanced";
@@ -1421,7 +1680,7 @@
         renderHeroResult(null);
         rebuildGrid();
         renderPicks();
-        toast("🔄 초기화 완료");
+        toast(t("toastReset"));
         history.replaceState(null, "", location.pathname);
       };
 
@@ -1442,8 +1701,9 @@
         url.searchParams.set("smax", $("sumMax").value);
         url.searchParams.set("prem", premiumOn ? "1" : "0");
         url.searchParams.set("ad", avoidDupOn ? "1" : "0");
+        const t = window.t || ((key) => key);
         await copyText(url.toString());
-        toast("🔗 링크 복사 완료");
+        toast(t("toastLinkCopied"));
       };
 
       // =========================
@@ -1497,9 +1757,12 @@
       }
 
       function fmtWon(n) {
+        const t = window.t || ((key) => key);
+        const lang = window.currentLang || "ko";
         const sign = n < 0 ? "-" : "";
         const x = Math.abs(Math.trunc(n));
-        return sign + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
+        const formatted = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return lang === "en" ? sign + formatted + " KRW" : sign + formatted + "원";
       }
 
       function runSim({ draws, ticketsPerDraw, mode, fast = false }) {
@@ -1558,13 +1821,14 @@
       }
 
       function renderDist(dist) {
+        const t = window.t || ((key) => key);
         const rows = [
-          ["1등", "6개", dist[1]],
-          ["2등", "5+보너스", dist[2]],
-          ["3등", "5개", dist[3]],
-          ["4등", "4개", dist[4]],
-          ["5등", "3개", dist[5]],
-          ["낙첨", "0~2개", dist[0]],
+          [t("rank1st"), t("criteria6"), dist[1]],
+          [t("rank2nd"), t("criteria5Bonus"), dist[2]],
+          [t("rank3rd"), t("criteria5"), dist[3]],
+          [t("rank4th"), t("criteria4"), dist[4]],
+          [t("rank5th"), t("criteria3"), dist[5]],
+          [t("rankLose"), t("criteria0to2"), dist[0]],
         ];
         const body = $("distBody");
         body.innerHTML = rows
@@ -1583,6 +1847,7 @@
       }
 
       function renderSummary(res, fast) {
+        const t = window.t || ((key) => key);
         const tone = res.profit >= 0 ? "good" : "bad";
         const roiPct = res.roi * 100;
         const roiTxt = isFinite(roiPct) ? roiPct.toFixed(2) + "%" : "—";
@@ -1591,62 +1856,64 @@
           (Number($("p1").value) || 0) === 0 ||
           (Number($("p2").value) || 0) === 0 ||
           (Number($("p3").value) || 0) === 0
-            ? "※ 1~3등 당첨금은 회차별 변동이라 비워두면(0) 수익이 과소평가돼."
+            ? t("hintPrizes")
             : "";
 
         $("simSummary").innerHTML = `
         <div class="row" style="margin-bottom:8px;">
-          <span class="pill">SIM Seed <strong>${res.simSeed}</strong></span>
-          <span class="pill">${fast ? "⚡ 빠른 모드(근사)" : "정밀 모드"}</span>
+          <span class="pill">${t("simSeed")} <strong>${res.simSeed}</strong></span>
+          <span class="pill">${fast ? t("fastMode") : t("preciseMode")}</span>
         </div>
         <div class="row" style="margin-bottom:8px;">
-          <span class="pill">총 지출 <strong>${fmtWon(
+          <span class="pill">${t("totalSpent")} <strong>${fmtWon(
             res.spent
           )}</strong></span>
-          <span class="pill">총 당첨금 <strong>${fmtWon(
+          <span class="pill">${t("totalRevenue")} <strong>${fmtWon(
             res.revenue
           )}</strong></span>
         </div>
         <div class="row" style="margin-bottom:8px;">
-          <span class="pill">순손익 <strong class="badge ${tone}">${fmtWon(
+          <span class="pill">${t("netProfit")} <strong class="badge ${tone}">${fmtWon(
           res.profit
         )}</strong></span>
-          <span class="pill">ROI <strong class="badge ${tone}">${roiTxt}</strong></span>
+          <span class="pill">${t("roi")} <strong class="badge ${tone}">${roiTxt}</strong></span>
         </div>
         <div class="help">${hint}</div>
       `;
       }
 
       $("btnSim").onclick = () => {
+        const t = window.t || ((key) => key);
         const draws = Math.max(1, Number($("simDraws").value) || 1);
         const ticketsPerDraw = Math.max(1, Number($("simTickets").value) || 1);
         const mode = $("simMode").value;
 
         if (mode === "usePicks" && (!picks || !picks.length)) {
-          toast("추천 세트를 먼저 만들어줘", "warn");
+          toast(t("toastNeedPicks"), "warn");
           return;
         }
 
         const res = runSim({ draws, ticketsPerDraw, mode, fast: false });
         renderDist(res.dist);
         renderSummary(res, false);
-        toast("🧪 시뮬레이션 완료");
+        toast(t("toastSimComplete"));
       };
 
       $("btnSimFast").onclick = () => {
+        const t = window.t || ((key) => key);
         const draws = Math.max(1, Number($("simDraws").value) || 1);
         const ticketsPerDraw = Math.max(1, Number($("simTickets").value) || 1);
         const mode = $("simMode").value;
 
         if (mode === "usePicks" && (!picks || !picks.length)) {
-          toast("추천 세트를 먼저 만들어줘", "warn");
+          toast(t("toastNeedPicks"), "warn");
           return;
         }
 
         const res = runSim({ draws, ticketsPerDraw, mode, fast: true });
         renderDist(res.dist);
         renderSummary(res, true);
-        toast("⚡ 빠른 시뮬 완료");
+        toast(t("toastSimFast"));
       };
 
       // =========================
