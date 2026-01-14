@@ -1190,7 +1190,7 @@
         },
       };
 
-      const defaultLang = "ko";
+      const defaultLang = "en";
       const supportedLangs = ["ko", "en"];
       let currentLang = defaultLang;
 
@@ -1240,7 +1240,7 @@
         if (browserLang && browserLang.toLowerCase().startsWith("ko")) {
           return "ko";
         }
-        return defaultLang;
+        return "en";
       }
 
       function setLang(lang, options = {}) {
