@@ -1209,21 +1209,40 @@
         const descMeta = document.querySelector('meta[name="description"]');
         if (descMeta) descMeta.setAttribute("content", t("metaDescription"));
         document.documentElement.lang = currentLang;
+        // Update all data-i18n elements
         document.querySelectorAll("[data-i18n]").forEach((el) => {
-          el.textContent = t(el.dataset.i18n);
+          const key = el.dataset.i18n;
+          if (key) {
+            el.textContent = t(key);
+          }
         });
+        // Update all data-i18n-title elements
         document.querySelectorAll("[data-i18n-title]").forEach((el) => {
-          el.title = t(el.dataset.i18nTitle);
+          const key = el.dataset.i18nTitle;
+          if (key) {
+            el.title = t(key);
+          }
         });
+        // Update all data-i18n-placeholder elements
         document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-          el.placeholder = t(el.dataset.i18nPlaceholder);
+          const key = el.dataset.i18nPlaceholder;
+          if (key) {
+            el.placeholder = t(key);
+          }
         });
+        // Update all data-i18n-html elements
         document.querySelectorAll("[data-i18n-html]").forEach((el) => {
-          el.innerHTML = t(el.dataset.i18nHtml);
+          const key = el.dataset.i18nHtml;
+          if (key) {
+            el.innerHTML = t(key);
+          }
         });
         // Update select options
         document.querySelectorAll("select option[data-i18n]").forEach((option) => {
-          option.textContent = t(option.dataset.i18n);
+          const key = option.dataset.i18n;
+          if (key) {
+            option.textContent = t(key);
+          }
         });
       }
 
