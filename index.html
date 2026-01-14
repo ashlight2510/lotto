@@ -463,15 +463,59 @@
         text-align: center;
 }
   </style>
+  <style>
+    .lang-switch {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: inline-flex;
+      gap: 0;
+      padding: 3px;
+      border-radius: 999px;
+      background: rgba(11, 16, 32, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      border: 1px solid rgba(43, 92, 255, 0.3);
+    }
+    .lang-switch button {
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 44px;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+    .lang-switch button.active {
+      background: rgba(43, 92, 255, 0.2);
+      color: #2b5cff;
+      box-shadow: 0 2px 8px rgba(43, 92, 255, 0.4);
+    }
+    .lang-switch button:not(.active):hover {
+      background: rgba(43, 92, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+    }
+  </style>
 </head>
 
-  <body><div class="wrap">
+  <body>
+  <div class="lang-switch" role="tablist" aria-label="Language switcher">
+    <button type="button" data-lang="ko" class="active">KR</button>
+    <button type="button" data-lang="en">EN</button>
+  </div>
+  <div class="wrap">
       <header>
         <div class="brand">
           <div class="logo">🍀</div>
           <div>
             <div>LuckyLab</div>
-            <small>로또 6/45 번호 추천 + 시뮬레이션</small>
+            <small data-i18n="subtitle">로또 6/45 번호 추천 + 시뮬레이션</small>
           </div>
         </div>
         <div class="top-actions">
@@ -480,15 +524,15 @@
             href="https://funnyfunny.cloud/"
             target="_blank"
             rel="noopener"
-            >다른 서비스 보기</a
+            data-i18n="btnOtherService">다른 서비스 보기</a
           >
-          <button id="btnCopyAll" class="ghost" title="추천 번호 전체 복사">
+          <button id="btnCopyAll" class="ghost" data-i18n-title="btnCopyAllTitle" data-i18n="btnCopyAll">
             📋 전체 복사
           </button>
-          <button id="btnShare" class="ghost" title="현재 설정 링크 복사">
+          <button id="btnShare" class="ghost" data-i18n-title="btnShareTitle" data-i18n="btnShare">
             🔗 공유
           </button>
-          <button id="btnReset" title="초기화">초기화</button>
+          <button id="btnReset" data-i18n-title="btnResetTitle" data-i18n="btnReset">초기화</button>
         </div>
       </header>
 
@@ -876,6 +920,121 @@
 
     <script>
       // =========================
+      // i18n
+      // =========================
+      const translations = {
+        ko: {
+          metaTitle: "LuckyLab — Lotto 6/45 Simulator & Picks",
+          metaDescription: "로또 6/45 번호 추천(랜덤/필터) + 시뮬레이션 + 통계",
+          subtitle: "로또 6/45 번호 추천 + 시뮬레이션",
+          btnOtherService: "다른 서비스 보기",
+          btnCopyAll: "📋 전체 복사",
+          btnCopyAllTitle: "추천 번호 전체 복사",
+          btnShare: "🔗 공유",
+          btnShareTitle: "현재 설정 링크 복사",
+          btnReset: "초기화",
+          btnResetTitle: "초기화",
+          toastCopy: "✅ 복사했어",
+        },
+        en: {
+          metaTitle: "LuckyLab — Lotto 6/45 Simulator & Picks",
+          metaDescription: "Lotto 6/45 number recommendations (random/filter) + simulation + statistics",
+          subtitle: "Lotto 6/45 Number Recommendations + Simulation",
+          btnOtherService: "View More Services",
+          btnCopyAll: "📋 Copy All",
+          btnCopyAllTitle: "Copy all recommended numbers",
+          btnShare: "🔗 Share",
+          btnShareTitle: "Copy current settings link",
+          btnReset: "Reset",
+          btnResetTitle: "Reset",
+          toastCopy: "✅ Copied",
+        },
+      };
+
+      const defaultLang = "ko";
+      const supportedLangs = ["ko", "en"];
+      let currentLang = defaultLang;
+
+      function t(key, vars = {}) {
+        const langTable = translations[currentLang] || translations.ko;
+        let template = langTable?.[key] ?? translations.ko?.[key] ?? key;
+        if (typeof template !== "string") return template;
+        Object.keys(vars).forEach((k) => {
+          template = template.replace(new RegExp(`\\{${k}\\}`, "g"), vars[k]);
+        });
+        return template;
+      }
+
+      function applyTranslations() {
+        document.title = t("metaTitle");
+        const descMeta = document.querySelector('meta[name="description"]');
+        if (descMeta) descMeta.setAttribute("content", t("metaDescription"));
+        document.documentElement.lang = currentLang;
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          el.textContent = t(el.dataset.i18n);
+        });
+        document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+          el.title = t(el.dataset.i18nTitle);
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+          el.placeholder = t(el.dataset.i18nPlaceholder);
+        });
+      }
+
+      function detectLang() {
+        const params = new URLSearchParams(window.location.search);
+        const paramLang = params.get("lang");
+        if (supportedLangs.includes(paramLang)) return paramLang;
+        const stored = localStorage.getItem("preferredLang");
+        if (supportedLangs.includes(stored)) return stored;
+        const intlLocale =
+          typeof Intl === "object" && typeof Intl.DateTimeFormat === "function"
+            ? Intl.DateTimeFormat().resolvedOptions().locale
+            : "";
+        const sources = [
+          ...(navigator.languages || []),
+          navigator.language,
+          navigator.userLanguage,
+          intlLocale,
+        ]
+          .filter(Boolean)
+          .map((locale) => locale.toLowerCase());
+        const hasKorean = sources.some((locale) => locale.startsWith("ko"));
+        return hasKorean ? "ko" : "en";
+      }
+
+      function setLang(lang, options = {}) {
+        const nextLang = supportedLangs.includes(lang) ? lang : defaultLang;
+        currentLang = nextLang;
+        window.currentLang = currentLang;
+        document.documentElement.lang = nextLang;
+        localStorage.setItem("preferredLang", nextLang);
+        document.querySelectorAll(".lang-switch button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.lang === nextLang);
+        });
+        applyTranslations();
+        if (options.updateUrl) {
+          const url = new URL(window.location.href);
+          url.searchParams.set("lang", nextLang);
+          window.history.replaceState({}, "", url);
+        }
+      }
+
+      document.querySelectorAll(".lang-switch button").forEach((button) => {
+        button.addEventListener("click", () => {
+          setLang(button.dataset.lang, { updateUrl: true });
+        });
+      });
+
+      setLang(detectLang(), { updateUrl: false });
+
+      // Make t() function and currentLang globally available
+      window.t = t;
+      window.currentLang = currentLang;
+      window.setLang = setLang;
+
+      // =========================
+      // =========================
       // Core: RNG (seeded)
       // =========================
       function mulberry32(seed) {
@@ -911,9 +1070,10 @@
         toast._t = setTimeout(() => toastEl.classList.remove("show"), 1400);
       }
       async function copyText(txt) {
+        const t = window.t || ((key, vars = {}) => key);
         try {
           await navigator.clipboard.writeText(txt);
-          toast("✅ 복사했어");
+          toast(t("toastCopy"));
         } catch (e) {
           const ta = document.createElement("textarea");
           ta.value = txt;
@@ -921,7 +1081,7 @@
           ta.select();
           document.execCommand("copy");
           ta.remove();
-          toast("✅ 복사했어");
+          toast(t("toastCopy"));
         }
       }
 
